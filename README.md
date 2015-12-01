@@ -9,23 +9,19 @@ The source class parse the most frequent names in the 1990's in the U.S. The dat
 
 After cloning this repository, the classes, the pivot and dashboard can be imported as usual using Studio or Atelier, or from terminal as follows:
 
+```python
+Set path="\<path-to-local-files>"
 
-`Set path="\<path-to-local-files>"`
-
-`Write $system.OBJ.Load(path_"NamesUS.xml","cf")`
-```javascript
- Write $system.OBJ.Load(path_"NamesUSCube.xml","cf")
-
- Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.pivot.xml")
-
- Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.dashboard.xml")
+Write $system.OBJ.Load(path_"NamesUS.xml","cf")
+Write $system.OBJ.Load(path_"NamesUSCube.xml","cf")
+Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.pivot.xml")
+Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.dashboard.xml")
 ```
 
 To generate data based on the name frequency in the 1990s in the US and to build the DeepSee cube please run: 
 
-```javascript
+```
 Do ##class(Ale.NamesUS).GenerateData() 
-
 Do ##class(%DeepSee.Utils).%BuildCube("NamesUS")
 ```
 
