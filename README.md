@@ -1,7 +1,8 @@
 # DeepSee-USNames
 This repository contains the source classes to be used in DeepSee, InterSystem's Business Intelligence platform: 
-[DeepSee](http://www.intersystems.com/our-products/embedded-technologies/deepsee/ "DeepSee")
-
+<http://www.intersystems.com/our-products/embedded-technologies/deepsee/>
+[DeepSee]( "DeepSee")
+[I'm an inline-style link](https://www.google.com)
 The source class parse the most frequent names in the 1990's in the U.S. The data is extracted from this page from the US census: 
 ![Alt text](http://www2.census.gov/topics/genealogy/1990surnames/dist.male.first "DeepSee-USNames")
 
