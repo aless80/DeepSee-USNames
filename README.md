@@ -9,11 +9,11 @@ The source class parse the most frequent names in the 1990's in the U.S. The dat
 
 After cloning this repository, the classes, the pivot and dashboard can be imported as usual using Studio or Atelier, or from terminal as follows:
 
-`
-Set path="<path-to-local-files>"
 
- Write $system.OBJ.Load(path_"NamesUS.xml","cf")
- 
+`Set path="\<path-to-local-files>"`
+
+`Write $system.OBJ.Load(path_"NamesUS.xml","cf")`
+`
  Write $system.OBJ.Load(path_"NamesUSCube.xml","cf")
 
  Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.pivot.xml")
