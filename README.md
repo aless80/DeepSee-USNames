@@ -13,19 +13,21 @@ After cloning this repository, the classes, the pivot and dashboard can be impor
 `Set path="\<path-to-local-files>"`
 
 `Write $system.OBJ.Load(path_"NamesUS.xml","cf")`
-`
+```javascript
  Write $system.OBJ.Load(path_"NamesUSCube.xml","cf")
 
  Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.pivot.xml")
 
- Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.dashboard.xml")`
+ Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.dashboard.xml")
+```
 
 To generate data based on the name frequency in the 1990s in the US and to build the DeepSee cube please run: 
-`
+
+```javascript
 Do ##class(Ale.NamesUS).GenerateData() 
 
 Do ##class(%DeepSee.Utils).%BuildCube("NamesUS")
-`
+```
 
 Screenshot of the dashboard:
 ![Alt text](https://github.com/aless80/DeepSee-USNames/blob/master/DeepSee-USNames.png "DeepSee-USNames Dashboard")
