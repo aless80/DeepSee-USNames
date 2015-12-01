@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for UNIX (SUSE Linux Enterprise Server for x86-64) 2016.2 (Build 533)" ts="2015-12-01 13:51:26">
+<Class name="Ale.NamesUS">
+<Super>%Persistent</Super>
+<TimeChanged>63887,49833.578392</TimeChanged>
+<TimeCreated>63778,44412.436487</TimeCreated>
+
+<Property name="NameID">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="NameCount">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="Name">
+<Type>%String</Type>
+</Property>
+
+<Property name="Frequency">
+<Type>%Numeric</Type>
+</Property>
+
+<Property name="CumFrequency">
+<Type>%Numeric</Type>
+</Property>
+
+<Property name="Rank">
+<Type>%Integer</Type>
+</Property>
+
+<Method name="GenerateData">
+<Description>
+To generate data based on the name frequency in the 1990s in the US and to build the DeepSee cube please run: 
+Do ##class(Ale.NamesUS).GenerateData() 
+Do ##class(%DeepSee.Utils).%BuildCube("NamesUS")
+Follow the link in ..GetRawTextFromLink() for the details on the dataset</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>maxCount:%Integer</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    Set status=$$$OK
+    Write !, "Deleting Names data..."
+    //first kill extent and kill extents of child tables (none for Ale.NamesUS)
+    Do ..%KillExtent()
+    
+    Write !, "Adding Names..."
+	IF $DATA(maxCount)=0 {
+		Set status=..GetNames()
+	} ELSE {
+		Set status=..GetNames(maxCount)
+	}    
+    Quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetRawTextFromLink">
+<Description><![CDATA[
+s tRawText=##class(Ale.NamesUS).GetRawTextFromLink(,.pSC)
+Derives the server name and URL from <var>pLink</var> and then uses these to target a
+<class>%Net.HttpRequest</class> at the article, returning its raw content as a string.]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pLink:%String,*pSC:%Status</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	I $D(pLink)=0 {
+		S pLink="http://www2.census.gov/topics/genealogy/1990surnames/dist.male.first" 	
+		S pLink=$e(pLink,$find(pLink,"http://"),*) 										
+	}
+	set pSC = $$$OK
+	set tRawText = ""
+	try {
+		// derive server and path from pLink
+		set pLink = $zstrip(pLink,"<>W")
+			
+		set tFirstSlash = $find(pLink,"/")
+		set tServer = $e(pLink,1,tFirstSlash-2)
+		set tPath = $e(pLink,tFirstSlash-1,*)
+		
+		// send the HTTP request for the article
+		set tRequest = ##class(%Net.HttpRequest).%New()
+		set tRequest.Server = tServer
+		set tSC = tRequest.Get(tPath)
+		quit:$$$ISERR(tSC)
+		set len = 32000
+		while len>0 {
+			set tString = tRequest.HttpResponse.Data.Read(.len, .pSC)
+			quit:$$$ISERR(pSC)
+			set tRawText = tRawText _ tString
+		}
+		//Remove those $c(10) characters
+		set tRawText=$REPLACE($ZCONVERT(tRawText,"O","JS"),"\n","\")
+		//Strip all double spaces
+		while $find(tRawText,"  ") > 0 {
+			set tRawText=$REPLACE(tRawText,"  "," ")
+		}
+	} catch (ex) {
+		set pSC = ex.AsStatus()
+	}
+	quit tRawText
+]]></Implementation>
+</Method>
+
+<Method name="GetDataFromTable">
+<Description>
+run:  d ##class(Ale.NamesUS).GetDataFromTable(,.line,.nameCount)</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[pLink:%String,&line:%String,*nameCount:%Integer]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	//As List of %String
+	IF $D(pLink)=0 {
+		S raw=..GetRawTextFromLink()
+	} ELSE {
+		S raw=..GetRawTextFromLink(pLink)
+		}
+ 	s i = 1
+ 	s l = 0
+ 	s lOld=0
+ 	for { //for on lines
+ 		s l=$find(raw,"\",l)
+ 		Q:l=0
+ 		
+ 		s temp = $E(raw,lOld,l-1)
+ 		s space = 1
+ 		s spaceOld = 0 		
+ 		s j = 0
+    		/*The data looks like:
+    		"DORSEY 0.004 90.029 1216\"
+    		*/
+    		s counter=0
+    		while space > 0 {
+	    		//Security quit
+				s counter=counter+1
+				Q:counter=10
+
+	    		s space=$find(temp," ",spaceOld)
+	    		if space>0 {
+		    		//Convert to number some of these fields: that happens in GetNames()
+		    		//NB: It is important to remove spaces!
+		    		S line(i,$I(j))=$TRANSLATE($E(temp,spaceOld,space-2)," ","")
+	    		}
+	    		elseif space=0 {
+		    		S line(i,$I(j))=$E(temp,spaceOld,*-1)
+	    		}
+				s spaceOld = space
+				Q:space=0	
+    		}
+ 		//}
+		s lOld=l
+		s i=i+1
+ 	}
+ 	s nameCount = i - 1
+ 	Q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetNames">
+<Description>
+run: d ##class(Ale.NamesUS).GetNames()</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>records:%Integer</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	d ..%KillExtent()
+	S status=..GetDataFromTable(,.line, .nameCount) 
+	IF $DATA(records)=0 {
+	S records=nameCount
+	}
+ 	//W !!,"GetNames records="_records
+	For n = 1:1:records {
+		Set name=##class(Ale.NamesUS).%New()
+    	Set name.NameCount=records
+    	Set name.NameID=n    	
+    	Set name.Name=line(n,1)
+    	Set name.Frequency=line(n,2)
+ 		Set name.CumFrequency=line(n,3)
+ 		Set name.Rank=+line(n,4) 		
+ 		
+ 		Set status=name.%Save()
+	}
+	
+	If $$$ISERR(status) {Do $System.Status.DisplayError(status) Write !, "Name save error"}
+	Write !
+    Write records," names stored in Ale.NamesUS"
+    Quit status
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Ale.NamesUSD</DataLocation>
+<DefaultData>NamesUSDefaultData</DefaultData>
+<IdLocation>^Ale.NamesUSD</IdLocation>
+<IndexLocation>^Ale.NamesUSI</IndexLocation>
+<StreamLocation>^Ale.NamesUSS</StreamLocation>
+<Data name="NamesUSDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>NameID</Value>
+</Value>
+<Value name="3">
+<Value>NameCount</Value>
+</Value>
+<Value name="4">
+<Value>Name</Value>
+</Value>
+<Value name="5">
+<Value>Frequency</Value>
+</Value>
+<Value name="6">
+<Value>CumFrequency</Value>
+</Value>
+<Value name="7">
+<Value>Rank</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
