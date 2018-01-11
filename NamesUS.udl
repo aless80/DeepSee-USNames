@@ -64,15 +64,15 @@ ClassMethod GetRawTextFromLink(pLink As %String, Output pSC As %Status) As %Stri
 		Set tRequest.SSLConfiguration="Temp"		
 		Set tRequest.Server = tServer
 		Set tSC = tRequest.Get(tPath)
+		//Delete the SSLConfigs
+		Zn "%SYS"
+		Set st=##class(Security.SSLConfigs).Delete("Temp")
+		Zn namespace
 		If 'tSC{
 			zn namespace
 			W !,$System.Status.DisplayError(tSC)
 			Quit 
 		}
-		//Delete the SSLConfigs
-		Zn "%SYS"
-		Set st=##class(Security.SSLConfigs).Delete("Temp")
-		Zn namespace
 		//Read the data		
 		Quit:$$$ISERR(tSC)
 		Set len = 32000
