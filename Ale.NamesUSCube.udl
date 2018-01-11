@@ -1,20 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for UNIX (SUSE Linux Enterprise Server for x86-64) 2016.2 (Build 533)" ts="2015-12-01 13:51:40">
-<Class name="Ale.NamesUSCube">
-<Description>
-Grabs the data in http://www2.census.gov/topics/genealogy/1990surnames/dist.male.first
-cantaining the frequency of first Names in the US in 1990, or something like that</Description>
-<ProcedureBlock>1</ProcedureBlock>
-<Super>%DeepSee.CubeDefinition</Super>
-<TimeChanged>63887,49290.651367</TimeChanged>
-<TimeCreated>63778,44994.612134</TimeCreated>
-<DependsOn>Ale.NamesUS</DependsOn>
+/// Grabs the data in http://www2.census.gov/topics/genealogy/1990surnames/dist.male.first
+/// cantaining the frequency of first Names in the US in 1990, or something like that
+Class Ale.NamesUSCube Extends %DeepSee.CubeDefinition [ DependsOn = Ale.NamesUS ]
+{
 
-<XData name="Cube">
-<Description>
-Cube definition from Architect.</Description>
-<XMLNamespace>http://www.intersystems.com/deepsee</XMLNamespace>
-<Data><![CDATA[
+/// Cube definition from Architect.
+XData Cube [ XMLNamespace = "http://www.intersystems.com/deepsee" ]
+{
 <cube xmlns="http://www.intersystems.com/deepsee" name="NamesUS" displayName="NamesUS" disabled="false" abstract="false" sourceClass="Ale.NamesUS" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0" disableListingGroups="false">
   <dimension name="NamesD" disabled="false" hasAll="false" allCaption="All NamesD" allDisplayName="NamesD" type="data" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false" hidden="false">
@@ -63,9 +54,9 @@ Cube definition from Architect.</Description>
     <additionalDescription>undefined</additionalDescription>
   </listing>
 </cube>
-]]></Data>
-</XData>
+}
 
-<Parameter name="DOMAIN"/>
-</Class>
-</Export>
+Parameter DOMAIN;
+
+}
+
