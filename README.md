@@ -14,10 +14,11 @@ After cloning this repository, the classes, the pivot and dashboard can be impor
 Set path="\<path-to-local-files>"
 Write $system.OBJ.Load(path_"NamesUS.cls","cf")
 Write $system.OBJ.Load(path_"NamesUSCube.cls","cf")
-Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.pivot.xml",1)
-Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.dashboard.xml",1)
+Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.pivot.DFI",1)
+Do ##class(%DeepSee.UserLibrary.Utils).%Import(path_"NamesUS.dashboard.DFI",1)
 ```
 
+If your instance does not support UDL formatting please use the .xml files in the xml directory.  
 To generate data based on the name frequency in the 1990s in the US and to build the DeepSee cube please run: 
 
 ```
