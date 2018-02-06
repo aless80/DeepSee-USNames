@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<dashboard xmlns="http://www.intersystems.com/deepsee/library" name="NamesUS" folderName="" title="U.S. Names in the 1990&apos;s" description="" keywords="" owner="Alessandro Marin" shared="true" public="true" locked="false" resource="" timeCreated="2015-12-01T19:02:14.575Z" createdBy="UnknownUser" category="Advanced Modeling" bookCover="" scheme="" worklistCount="1" snapTo="true" snapGrid="true" gridRows="20" gridCols="20" canResize="true" canModify="true" showTitleBar="true" titleBarOpacity="" titleBarColor="" selectedTitleBarOpacity="" selectedTitleBarColor="" titleBarTextColor="" selectedTitleBarTextColor="" titleBarFont="" companyName="" companyLogo="" companyStyle="" backgroundColor="white" backgroundImage="none" backgroundRepeat="no-repeat" backgroundSize="100% 100%" backgroundOpacity="1" widgetBorders="1px solid #F0F0F0" widgetBordersSwitch="edit" widgetBordersColor="#F0F0F0" widgetBordersStyle="solid" widgetBordersWidth="1" widgetBordersToggle="true">
+  <widget name="NamesUS Table" type="pivot" subtype="pivot" subtypeClass="lineChart" title="" dataSource="NamesUS.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="0" colSpanL="9" rowSpanL="20" showToolbar="true" showToolbarBottomBorder="true" showToolbarOnlyWhenMaximized="false" colorToolbar="#F0F0F0" opacityToolbar="1" backgroundColor="#F0F0F0" opacity="1" theme="" dataColorList="">
+    <control name="" action="applyFilter" target="*" targetProperty="[RankD].[H1].[Rank]" location="dashboard" type="auto" controlClass="" label="Rank" title="" value="&amp;[1]:&amp;[25]" text="" readOnly="false" valueList="" displayList="" activeWhen="">
+      <valueRequired>false</valueRequired>
+    </control>
+    <control name="" action="applyFilter" target="*" targetProperty="[NamesD].[H1].[Name]" location="dashboard" type="auto" controlClass="" label="Name" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen="">
+      <valueRequired>false</valueRequired>
+    </control>
+  </widget>
+  <widget name="NamesUS Chart" type="pivot" subtype="barChartStacked" subtypeClass="barChart" title="" dataSource="NamesUS.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="9" colSpanL="11" rowSpanL="20" showToolbar="true" showToolbarBottomBorder="true" showToolbarOnlyWhenMaximized="false" colorToolbar="#F0F0F0" opacityToolbar="1" backgroundColor="#F0F0F0" opacity="1" theme="" dataColorList="">
+    <control name="" action="chooseColumnSpec" target="" targetProperty="" location="widget" type="dropdown" controlClass="" label="Columns" title="" value="[Measures].[Frequency Meas]" text="" readOnly="false" valueList="[Measures].[Frequency Meas],[Measures].[CumFrequency Meas]" displayList="Frequency,Cumulative Frequency" activeWhen="">
+      <valueRequired>false</valueRequired>
+    </control>
+    <dataProperty name="" label="" width="" align="" subtype="" style="" display="" format="" showAs="" valueColumn="false" summary="" summaryValue="" dataValue="Frequency" targetValue="" thresholdLower="" thresholdUpper="" rangeLower="" rangeUpper="" baseValue="" override=""></dataProperty>
+    <property name="analyzer">0</property>
+    <property name="chartToggle">none</property>
+    <property name="legendPos">none</property>
+    <override name="barChart">{appearance:'3D',hasZoom:true,legendVisible:'false',marginTop:'0',seriesColorScheme:'caribbean',valueLabelsVisible:true,xAxis:{_type:'axis'},yAxisList:[{_type:'axis'}],chartPivot:true,chartStacked:true,_type:'barChart'}</override>
+    <override name="legend">{hidden:true,legendBorderStyle:'border-style:solid;',legendLabels:'Cumulative Frequency',legendPosition:'right',legendStyle:'padding:0px;',legendTitle:'Cumulative Frequency',orientation:'horizontal',_type:'chartLegend'}</override>
+  </widget>
+</dashboard>
